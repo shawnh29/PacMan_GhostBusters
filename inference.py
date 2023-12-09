@@ -75,15 +75,13 @@ class DiscreteDistribution(dict):
         {}
         """
         "*** YOUR CODE HERE ***"
-        # Again, why are we accessing the values by 'self[key]'? 
-        # If we can access the keys like this, what's the point of self.keys() or self.items() or self.values()?
-
         total = self.total()
         if (total == 0):
             return
         keys = self.keys()
         for key in keys:
             self[key] = self[key] / total
+        
 
     def sample(self):
         """
@@ -107,7 +105,6 @@ class DiscreteDistribution(dict):
         0.0
         """
         "*** YOUR CODE HERE ***"
-        # Why are we accessing self? and not self.values() or self.items()
         sums = {}
         total = 0
         t = random.random()
@@ -359,7 +356,10 @@ class ParticleFilter(InferenceModule):
         """
         self.particles = []
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        n_each = self.numParticles // len(self.legalPositions)
+        for pos in self.legalPositions:
+            for j in range(1, n_each):
+                self.particles.append(pos)
 
     def observeUpdate(self, observation, gameState):
         """
@@ -374,7 +374,23 @@ class ParticleFilter(InferenceModule):
         the DiscreteDistribution may be useful.
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+
+        belief_dd = DiscreteDistribution()
+        for pos in self.particles:
+            p = self.getObservationProb(observation, gameState.getPacmanPosition(), pos, self.getJailPosition())
+            belief_dd[pos] += p
+        belief_dd.normalize()
+
+        # the special case 
+        if (all(v == 0 for v in belief_dd.values())):
+            self.initializeUniformly(gameState)
+            return
+        
+        new = []
+        for i in range(1, len(self.particles)):
+            new.append(belief_dd.sample())
+        self.particles = new
+        
 
     def elapseTime(self, gameState):
         """
@@ -393,6 +409,13 @@ class ParticleFilter(InferenceModule):
         This function should return a normalized distribution.
         """
         "*** YOUR CODE HERE ***"
+        distribution = DiscreteDistribution()
+        for pos in self.legalPositions:
+            count = self.particles.count(pos)
+            distribution[pos] = count / self.numParticles
+
+        return distribution
+
         raiseNotDefined()
 
 
