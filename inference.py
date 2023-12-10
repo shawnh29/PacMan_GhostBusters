@@ -545,7 +545,7 @@ class MarginalInference(InferenceModule):
             jointInference.initialize(gameState, self.legalPositions)
         jointInference.addGhostAgent(self.ghostAgent)
 
-    def observe(self, gameState):
+    def observe(self, gameState): 
         """
         Update beliefs based on the given distance observation and gameState.
         """

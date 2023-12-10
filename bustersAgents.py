@@ -147,7 +147,7 @@ class GreedyBustersAgent(BustersAgent):
         minimum_distance = 9999
         action_to_take = None
 
-        for action in legal:
+        for action in legal: 
             nextPos = Actions.getSuccessor(pacmanPosition, action)
             for dist in livingGhostPositionDistributions:
                 # Get the key (position) with the highest probability
