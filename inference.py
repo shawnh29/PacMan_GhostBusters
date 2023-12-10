@@ -356,6 +356,7 @@ class ParticleFilter(InferenceModule):
         """
         self.particles = []
         "*** YOUR CODE HERE ***"
+        # calculate how many samples each position should get
         n_each = self.numParticles // len(self.legalPositions)
         for pos in self.legalPositions:
             for j in range(1, n_each):
@@ -387,6 +388,7 @@ class ParticleFilter(InferenceModule):
             return
         
         new = []
+        # sample self.particles times and set that as the new beliefs
         for i in range(1, len(self.particles)):
             new.append(belief_dd.sample())
         self.particles = new
@@ -449,6 +451,7 @@ class JointParticleFilter(ParticleFilter):
         """
         self.particles = []
         "*** YOUR CODE HERE ***"
+        # obtain the Cartesian product, shuffle the result and set that as the new self.particles
         allPermutations = list(itertools.product(self.legalPositions, repeat = self.numGhosts))
         newList = allPermutations
         random.shuffle(newList)
@@ -499,6 +502,7 @@ class JointParticleFilter(ParticleFilter):
             return
         
         new = []
+        # sample the distribution and set that as the new beliefs
         for i in range(self.numParticles):
             new.append(belief_dd.sample())
         self.particles = new
